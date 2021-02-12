@@ -7,4 +7,4 @@ http.createServer(function(req,res) {
         if (err) throw Error();
         else res.end(data)
     });
- }).listen(3000, ()=>console.log('server--ok'))
+ }).listen(PORT, ()=>console.log('server--ok'))
