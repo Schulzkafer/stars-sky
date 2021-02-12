@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <canvas></canvas>
+
+    <script>
+        'use strict';
+
+
+
+
+        const canvas = document.querySelector('canvas')
+
+        canvas.height = innerHeight
+        canvas.width = innerWidth
+        const c = canvas.getContext('2d')
+
+            class Stars {
+            constructor(x, y, rad, color) {
+                this.x = x
+                this.y = y
+                this.rad = rad
+                this.color = color
+            }
+
+            draw() {
+                c.beginPath()
+                c.arc(this.x, this.y, this.rad, Math.PI * 2, 0, false)
+                c.shadowColor = this.color
+                c.shadowBlur = 15
+                c.fillStyle = this.color
+                c.fill()
+                c.closePath()
+            }
+        }
+
+        function Sun(col) {
+            this.col = col
+            c.beginPath()
+            c.arc(canvas.width / 2, canvas.height / 2, 30, Math.PI * 2, 0, false)
+            c.shadowColor = this.col
+            c.shadowBlur = 22
+            c.fillStyle = 'yellow'
+            c.fill()
+            c.closePath()
+
+        }
+        new Sun('yellow')
+
+        let colors = ['blue', 'white', 'red', 'yellow']
+        let arr;
+
+        function putStars() {
+            arr = []
+            for (let i = 0; i < 2000; i++) {
+                let x = Math.random() * (canvas.width + 1000) - (canvas.width + 1000 / 2)
+                let y = Math.random() * (canvas.height + 2000) - (canvas.height + 2000 / 2)
+
+                let color = colors[Math.floor(Math.random() * colors.length)]
+                let rad = Math.random() * 2
+
+                arr.push(new Stars(x, y, rad, color))
+            }
+        }
+        putStars()
+
+
+        let radians = 0
+        let alpha = 1
+        let down = false;
+
+        function animate() {
+            requestAnimationFrame(animate)
+            c.fillStyle = `rgba(10,10,10,${alpha})`
+            c.fillRect(0, 0, canvas.width, canvas.height)
+
+            c.save()
+            c.translate(canvas.width / 2, canvas.height / 2)
+            c.rotate(radians)
+            arr.forEach(element => {
+                element.draw()
+            });
+            c.restore()
+
+            new Sun('yellow')
+            radians += 0.003
+
+            if (down && alpha > 0.003) {
+                c.shadowColor = 'rgb(10,10,10)'
+                alpha -= 0.01
+            } else if (!down && alpha < 1) {
+                c.shadowColor = 'rgb(10,10,10)'
+                alpha += 0.01
+            }
+
+
+        }
+        animate()
+
+        document.body.addEventListener('mousedown', () => {
+            c.shadowColor = `rgba(10,10,10,1)`
+            down = true;
+        })
+
+        document.body.addEventListener('mouseup', () => {
+            down = false;
+        })
+
+        addEventListener('resize', () => {
+            canvas.height = innerHeight
+            canvas.width = innerWidth
+            putStars()
+            animate()
+        })
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
